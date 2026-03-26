@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    image: genai-conversation-design:latest
+    container_name: genai-app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./output:/app/output
+      - ./prompts:/app/prompts
+    restart: unless-stopped
