@@ -1,0 +1,35 @@
+#ignore virtual environment
+.venv/
+
+#ignore environment variables
+.env
+
+#ignore .DS_Store
+.DS_Store
+
+#ignore .pyc files
+*.pyc
+
+#ignore .pyo files
+*.pyo
+
+#ignore .pyd files
+*.pyd
+
+#ignore data directory
+tmp/
+
+.prettierrc
+
+
+__pycache__/
+*.pyc
+
+# ignore logs
+logs/
+*.log
+scripts/db_setup.sh
+.cursor/
+.vscode/
+venv/
+pyproject.toml
