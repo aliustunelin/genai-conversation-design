@@ -1,0 +1,203 @@
+system:
+  en: >
+    You are an expert Python developer.
+    Write clean, well-structured, production-quality code.
+    Always include type hints, docstrings, and test cases when asked.
+    Respond only with the requested code and brief explanations.
+  tr: >
+    Sen uzman bir Python geliştiricisisin.
+    Temiz, iyi yapılandırılmış, production kalitesinde kod yaz.
+    İstendiğinde her zaman tip belirteçleri, docstring'ler ve test case'leri ekle.
+    Sadece istenen kod ve kısa açıklamalarla yanıt ver.
+
+turns:
+  - number: 1
+    expected_success: true
+    notes:
+      en: "Standard stack-based bracket matching. Well-known problem, GPT-4o handles this easily."
+      tr: "Standart stack tabanlı parantez eşleştirme. Bilinen bir problem, GPT-4o bunu kolayca çözer."
+    prompt:
+      en: |
+        Write a Python function called `is_balanced` that checks whether a given string
+        has balanced parentheses, brackets, and braces: `()`, `[]`, `{}`.
+
+        Requirements:
+        - Return True if balanced, False otherwise
+        - Handle nested and mixed brackets correctly
+        - Empty string should return True
+        - Include type hints and docstring
+
+        Provide 5 test cases demonstrating edge cases.
+      tr: |
+        `is_balanced` adında bir Python fonksiyonu yaz. Bu fonksiyon, verilen bir string'in
+        dengeli parantezlere, köşeli parantezlere ve süslü parantezlere sahip olup olmadığını kontrol etsin: `()`, `[]`, `{}`.
+
+        Gereksinimler:
+        - Dengeli ise True, değilse False döndürsün
+        - İç içe ve karışık parantezleri doğru şekilde ele alsın
+        - Boş string True döndürmeli
+        - Tip belirteçleri ve docstring içermeli
+
+        Edge case'leri gösteren 5 test case ver.
+
+  - number: 2
+    expected_success: true
+    notes:
+      en: "Shunting-Yard algorithm is well-documented. More complex but within GPT-4o's capabilities."
+      tr: "Shunting-Yard algoritması iyi belgelenmiş. Daha karmaşık ama GPT-4o'nun yetenekleri dahilinde."
+    prompt:
+      en: |
+        Great work. Now extend this into a full mathematical expression evaluator.
+
+        Write a Python class called `ExpressionEvaluator` that:
+        1. Tokenizes a string expression like "3 + 4 * (2 - 1) / 5"
+        2. Respects operator precedence: `*` and `/` before `+` and `-`
+        3. Supports parentheses for grouping
+        4. Supports negative numbers (e.g., "-3 + 4")
+        5. Raises `ValueError` for invalid expressions (unbalanced parens, division by zero, invalid tokens)
+
+        Use the Shunting-Yard algorithm for parsing. Include type hints, docstring, and 8 test cases
+        covering: basic arithmetic, precedence, parentheses, negative numbers, division by zero, and invalid input.
+      tr: |
+        Harika. Şimdi bunu tam bir matematiksel ifade değerlendiriciye genişlet.
+
+        `ExpressionEvaluator` adında bir Python sınıfı yaz:
+        1. "3 + 4 * (2 - 1) / 5" gibi bir string ifadeyi tokenize etsin
+        2. Operatör önceliğine saygı göstersin: `*` ve `/`, `+` ve `-`'den önce
+        3. Gruplama için parantezleri desteklesin
+        4. Negatif sayıları desteklesin (örn. "-3 + 4")
+        5. Geçersiz ifadeler için `ValueError` fırlatsın (dengesiz parantez, sıfıra bölme, geçersiz tokenlar)
+
+        Parsing için Shunting-Yard algoritmasını kullan. Tip belirteçleri, docstring ve 8 test case ekle.
+        Temel aritmetik, öncelik, parantezler, negatif sayılar, sıfıra bölme ve geçersiz girdi kapsamalı.
+
+  - number: 3
+    expected_success: false
+    notes:
+      en: >
+        Full regex engine with lookahead/lookbehind + non-greedy + NFA is extremely complex.
+        Model will likely produce code that fails on edge cases, especially:
+        variable-length lookbehind, non-greedy matching on full-string match,
+        and nested group quantifiers combined with alternation.
+      tr: >
+        Lookahead/lookbehind + non-greedy + NFA ile tam regex motoru son derece karmaşık.
+        Model muhtemelen edge case'lerde başarısız olan kod üretecek, özellikle:
+        değişken uzunluklu lookbehind, tam string eşleşmesinde non-greedy matching
+        ve alternation ile birleştirilmiş iç içe grup quantifier'ları.
+    prompt:
+      en: |
+        Now implement a complete regex engine from scratch in Python — no `re` module or any
+        third-party regex library allowed.
+
+        Create a class `RegexEngine` with a method `match(pattern: str, text: str) -> bool` that returns
+        True if the pattern matches the ENTIRE text.
+
+        The engine must support ALL of the following features:
+        1. Literal characters
+        2. `.` — matches any single character
+        3. `*` — zero or more of the preceding element (greedy)
+        4. `+` — one or more of the preceding element (greedy)
+        5. `?` — zero or one of the preceding element
+        6. `*?`, `+?` — non-greedy (lazy) versions of `*` and `+`
+        7. `|` — alternation (e.g., `a|b` matches "a" or "b")
+        8. `(` `)` — grouping (e.g., `(ab)+` matches "abab")
+        9. Character classes: `[abc]`, `[a-z]`, `[^abc]` (negation)
+        10. Shorthand classes: `\d` (digit), `\w` (word char), `\s` (whitespace)
+        11. Anchors: `^` (start), `$` (end) — when used outside character classes
+        12. Escape sequences: `\.`, `\*`, `\+` etc. for literal matching
+        13. Lookahead: `(?=...)` (positive) and `(?!...)` (negative)
+        14. Lookbehind: `(?<=...)` (positive) and `(?<!...)` (negative)
+
+        Implementation requirements:
+        - Parse the pattern into an AST, then compile to an NFA or use recursive backtracking
+        - The engine must handle nested groups with quantifiers: `((a|b)*c)+`
+        - Non-greedy quantifiers must return the shortest match for the entire string
+        - Lookbehind must work with variable-length patterns
+
+        Test your implementation against ALL of these cases and include the output:
+
+        ```python
+        tests = [
+            # (pattern, text, expected)
+            (r"a*b", "aaab", True),
+            (r"a*b", "b", True),
+            (r"a+b", "b", False),
+            (r"(ab)+", "ababab", True),
+            (r"(a|b)*c", "abbabc", True),
+            (r"[a-z]+", "hello", True),
+            (r"[^0-9]+", "hello", True),
+            (r"[^0-9]+", "hello123", False),
+            (r"\d+\.\d+", "3.14", True),
+            (r"a*?b", "aaab", True),
+            (r"(a+?)(a*)", "aaaa", True),
+            (r"(?=a)a", "a", True),
+            (r"(?!b)a", "a", True),
+            (r"(?<=a)b", "ab", True),
+            (r"(?<!a)b", "cb", True),
+            (r"(?<!a)b", "ab", False),
+            (r"((a|b)*c)+", "acbcabc", True),
+            (r"a{2,4}", "aaa", True),
+            (r"^abc$", "abc", True),
+            (r"^abc$", "xabc", False),
+        ]
+        ```
+
+        Show the complete implementation and test results. Every test case must pass.
+      tr: |
+        Şimdi Python'da sıfırdan tam bir regex motoru implement et — `re` modülü veya herhangi
+        bir üçüncü parti regex kütüphanesi kullanılamaz.
+
+        `RegexEngine` adında bir sınıf oluştur. `match(pattern: str, text: str) -> bool` metodu
+        pattern'in TÜM text'i eşleşip eşleşmediğini döndürsün.
+
+        Motor aşağıdaki TÜM özellikleri desteklemeli:
+        1. Literal karakterler
+        2. `.` — herhangi bir tek karakteri eşleştirir
+        3. `*` — önceki elemanın sıfır veya daha fazlası (greedy)
+        4. `+` — önceki elemanın bir veya daha fazlası (greedy)
+        5. `?` — önceki elemanın sıfır veya biri
+        6. `*?`, `+?` — `*` ve `+`'nin non-greedy (lazy) versiyonları
+        7. `|` — alternation (örn. `a|b`, "a" veya "b"yi eşleştirir)
+        8. `(` `)` — gruplama (örn. `(ab)+`, "abab"ı eşleştirir)
+        9. Karakter sınıfları: `[abc]`, `[a-z]`, `[^abc]` (olumsuzlama)
+        10. Kısayol sınıfları: `\d` (rakam), `\w` (kelime karakteri), `\s` (boşluk)
+        11. Anchor'lar: `^` (başlangıç), `$` (bitiş) — karakter sınıfları dışında kullanıldığında
+        12. Escape dizileri: `\.`, `\*`, `\+` vb. literal eşleştirme için
+        13. Lookahead: `(?=...)` (pozitif) ve `(?!...)` (negatif)
+        14. Lookbehind: `(?<=...)` (pozitif) ve `(?<!...)` (negatif)
+
+        Implementasyon gereksinimleri:
+        - Pattern'i bir AST'ye parse et, sonra NFA'ya derle veya recursive backtracking kullan
+        - Motor, quantifier'lı iç içe grupları desteklemeli: `((a|b)*c)+`
+        - Non-greedy quantifier'lar, tüm string eşleşmesi için en kısa eşleşmeyi döndürmeli
+        - Lookbehind, değişken uzunluklu pattern'lerle çalışmalı
+
+        Implementasyonunu TÜM bu case'lere karşı test et ve çıktıyı göster:
+
+        ```python
+        tests = [
+            # (pattern, text, expected)
+            (r"a*b", "aaab", True),
+            (r"a*b", "b", True),
+            (r"a+b", "b", False),
+            (r"(ab)+", "ababab", True),
+            (r"(a|b)*c", "abbabc", True),
+            (r"[a-z]+", "hello", True),
+            (r"[^0-9]+", "hello", True),
+            (r"[^0-9]+", "hello123", False),
+            (r"\d+\.\d+", "3.14", True),
+            (r"a*?b", "aaab", True),
+            (r"(a+?)(a*)", "aaaa", True),
+            (r"(?=a)a", "a", True),
+            (r"(?!b)a", "a", True),
+            (r"(?<=a)b", "ab", True),
+            (r"(?<!a)b", "cb", True),
+            (r"(?<!a)b", "ab", False),
+            (r"((a|b)*c)+", "acbcabc", True),
+            (r"a{2,4}", "aaa", True),
+            (r"^abc$", "abc", True),
+            (r"^abc$", "xabc", False),
+        ]
+        ```
+
+        Tam implementasyonu ve test sonuçlarını göster. Her test case'i geçmeli.
